@@ -1,0 +1,28 @@
+<?php
+// app/Http/Middleware/CheckTeamAccessMiddleware.php
+
+namespace App\Http\Middleware;
+
+use Closure;
+use Illuminate\Http\Request;
+use Filament\Models\Contracts\FilamentUser;
+
+class CheckTeamAccessMiddleware
+{
+    public function handle(Request $request, Closure $next)
+    {
+        if (auth()->check()) {
+            /** @var FilamentUser $user */
+            $user = auth()->user();
+    
+            // Verifique se o usuário está associado a pelo menos um "Team"
+            if ($user->team->isEmpty()) {
+                abort(403, 'Você não tem permissão para acessar este recurso.');
+            }
+    
+            // Adicione lógica adicional conforme necessário.
+        }
+    
+        return $next($request);
+    }
+}
